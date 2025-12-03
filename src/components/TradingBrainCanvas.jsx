@@ -20,19 +20,9 @@ const TOOL_META = {
 const DEFAULT_LEVELS = [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1];
 const stripTrailingSlash = (url = "") =>
   url.endsWith("/") ? url.slice(0, -1) : url;
-// Base URLs configurables para consumir la API desde red pública
-const API_BASE_URL =
-  stripTrailingSlash(import.meta.env.VITE_API_URL) ||
-  (typeof window !== "undefined"
-    ? stripTrailingSlash(window.location.origin)
-    : "");
-const WS_BASE_URL =
-  stripTrailingSlash(import.meta.env.VITE_WS_URL) ||
-  stripTrailingSlash(
-    (API_BASE_URL ||
-      (typeof window !== "undefined" ? window.location.origin : "")
-    ).replace(/^http/i, "ws")
-  );
+// URLs del backend (obligatorio definirlas; sin ellas el frontend no sabrá a dónde llamar)
+const API_BASE_URL = stripTrailingSlash(import.meta.env.VITE_API_URL || "");
+const WS_BASE_URL = stripTrailingSlash(import.meta.env.VITE_WS_URL || "");
 
 const sma = (data, length) => {
   const out = [];
@@ -210,6 +200,12 @@ const TradingBrainCanvas = ({
 
   useEffect(() => {
     if (!containerRef.current) return;
+    if (!API_BASE_URL || !WS_BASE_URL) {
+      console.error(
+        "Config faltante: define VITE_API_URL y VITE_WS_URL en tus variables de entorno (por ejemplo, en Vercel o .env.local)."
+      );
+      return;
+    }
 
     const chart = createChart(containerRef.current, {
       width: containerRef.current.clientWidth,

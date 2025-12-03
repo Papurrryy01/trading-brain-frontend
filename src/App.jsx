@@ -3,7 +3,91 @@ import React, { useMemo, useState, useEffect } from "react";
 import TradingBrainCanvas from "./components/TradingBrainCanvas.jsx";
 import TradingPlatformWidget from "./components/TradingPlatformWidget.jsx";
 
+const MODE = import.meta.env.VITE_MODE || "full";
+const isPublicDemo = MODE === "public";
+
 export default function App() {
+  // --- Demo pública: solo charts con CryptoCompare (sin backend/IA) ---
+  if (isPublicDemo) {
+    return (
+      <div
+        style={{
+          width: "100vw",
+          height: "100vh",
+          background: "#0f172a",
+          color: "#e2e8f0",
+          display: "flex",
+          flexDirection: "column",
+          fontFamily:
+            '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif',
+          padding: "16px",
+          gap: 12,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+          }}
+        >
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            <div style={{ fontSize: 18, fontWeight: 700, color: "#fff" }}>
+              Trading Brain — Demo pública (solo charts)
+            </div>
+            <div style={{ fontSize: 13, color: "#cbd5e1" }}>
+              Datos en vivo desde CryptoCompare. Sin backend, IA ni señales personalizadas.
+            </div>
+          </div>
+          <div
+            style={{
+              fontSize: 12,
+              color: "#cbd5e1",
+              border: "1px solid #334155",
+              borderRadius: 12,
+              padding: "8px 10px",
+              background: "rgba(51,65,85,0.4)",
+            }}
+          >
+            Modo: <strong style={{ color: "#22c55e" }}>demo</strong> (VITE_MODE=public)
+          </div>
+        </div>
+
+        <div
+          style={{
+            flex: 1,
+            borderRadius: 12,
+            border: "1px solid #1e293b",
+            background: "#0b1220",
+            boxShadow: "0 20px 80px rgba(0,0,0,0.45)",
+            padding: 10,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: 8,
+              fontSize: 13,
+              color: "#cbd5e1",
+            }}
+          >
+            <span style={{ fontWeight: 700, color: "#e2e8f0" }}>
+              Trading Platform · CryptoCompare feed
+            </span>
+            <span style={{ fontSize: 12, color: "#94a3b8" }}>
+              WS público · sin llamadas a backend propio
+            </span>
+          </div>
+          <div style={{ height: "100%" }}>
+            <TradingPlatformWidget />
+          </div>
+        </div>
+      </div>
+    );
+  }
   const [analysis, setAnalysis] = useState(null);
   const [activeTool, setActiveTool] = useState(null);
   const [symbol, setSymbol] = useState("EUR/USD");
